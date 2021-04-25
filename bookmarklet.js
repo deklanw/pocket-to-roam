@@ -1,22 +1,27 @@
-(function(){
+(function () {
+  // Retrieve all highlights in the text
 
-// Retrieve all highlights in the text
-
-  let highlightsList = document.getElementsByClassName('highlight');
+  let highlightsList = document.getElementsByClassName("highlight");
 
   let annotationIDList = [];
   let clipsTextList = [];
 
-  for(i = 0; i < highlightsList.length; i++){
-    let annotationID = highlightsList[i].attributes['annotation_id'].nodeValue;
-    let clipText = highlightsList[i].lastChild.nodeValue.replace(/^\s+|\s+$/g, "");
+  for (i = 0; i < highlightsList.length; i++) {
+    let annotationID = highlightsList[i].attributes["annotation_id"].nodeValue;
+    let clipText = highlightsList[i].lastChild.nodeValue.replace(
+      /^\s+|\s+$/g,
+      ""
+    );
 
-    if(!annotationIDList.includes(annotationID)){
-        annotationIDList.push(annotationID);
-        clipsTextList.push(clipText);
+    if (!annotationIDList.includes(annotationID)) {
+      annotationIDList.push(annotationID);
+      clipsTextList.push(clipText);
     } else {
-        let index = annotationIDList.lastIndexOf(annotationID);
-        clipsTextList[index] = clipsTextList[index].concat(' '+clipText).split("\n").join(" ");
+      let index = annotationIDList.lastIndexOf(annotationID);
+      clipsTextList[index] = clipsTextList[index]
+        .concat(" " + clipText)
+        .split("\n")
+        .join(" ");
     }
   }
 
@@ -24,24 +29,26 @@
 
   let title = document.title.replace("Pocket - ", "");
 
-  let originalURL = document.getElementById('reader.external-link.view-original');
-  if (typeof(originalURL) !== 'undefined'){
+  let originalURL = document.getElementById(
+    "reader.external-link.view-original"
+  );
+  if (typeof originalURL !== "undefined") {
     originalURL = originalURL.href;
   } else {
-    originalURL = ""
+    originalURL = "";
   }
 
-let author = null;
+  let author = null;
 
-try{
-  author = document.querySelector('header>h1+div div span').innerText;
-} catch (e) {
-  author = "";
-}
+  try {
+    author = document.querySelector("header>h1+div div span").innerText;
+  } catch (e) {
+    author = "";
+  }
 
   // Custom Formatting Output
 
-  for(i = 0; i < clipsTextList.length; i++){
+  for (i = 0; i < clipsTextList.length; i++) {
     clipsTextList[i] = clipsTextList[i].replace(/^\s+|\s+$/g, "");
   }
   let clips = clipsTextList.join("\n \t");
@@ -51,7 +58,7 @@ try{
     Pocket URL : ${location.href}
     Summary::
     [[Quotes]]
-      ${clips}`
+      ${clips}`;
 
   const tempTA = document.createElement("textarea");
   document.body.appendChild(tempTA);
@@ -60,5 +67,4 @@ try{
   document.execCommand("copy");
 
   alert("Highlights and metadata have been copied to the clipboard");
-
-})()
+})();
